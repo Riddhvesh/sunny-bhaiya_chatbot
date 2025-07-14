@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sunny Bhaiya Chatbot</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>💬 Sunny Bhaiya Chatbot</h1>
+
+    <select id="personality">
+      <option value="sunny">Sunny Bhaiya</option>
+      <option value="delhi_bhai">Delhi Bhai</option>
+      <option value="cricket_fan">Cricket Fan</option>
+    </select>
+
+    <div id="chat-box"></div>
+
+    <input type="text" id="user-input" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const userInput = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const personality = document.getElementById("personality").value;
+      const msg = userInput.value;
+
+      if (!msg) return;
+
+      chatBox.innerHTML += `<div class="user">You: ${msg}</div>`;
+      userInput.value = "";
+
+      const res = await fetch("/get", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ msg, personality })
+      });
+
+      const data = await res.json();
+      chatBox.innerHTML += `<div class="bot">Sunny Bhaiya: ${data.reply}</div>`;
+    }
+  </script>
+</body>
+</html>
